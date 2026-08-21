@@ -183,6 +183,7 @@ struct CADFont: Codable, Equatable {
 
 /// Типы сущностей
 enum EntityType: String, Codable, CaseIterable {
+    case unknown = "Unknown"
     case line = "Line"
     case circle = "Circle"
     case arc = "Arc"
