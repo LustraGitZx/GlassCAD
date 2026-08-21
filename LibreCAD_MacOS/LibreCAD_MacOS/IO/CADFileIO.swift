@@ -151,7 +151,7 @@ class CADFileIO {
             throw CADError.exportFailed("Failed to create PDF consumer")
         }
         
-        guard let context = CGContext(consumer: consumer, mediaBox: CGRect(origin: .zero, size: pageSize), pdfInfo as CFDictionary) else {
+        guard let context = CGContext(consumer: consumer, mediaBox: &CGRect(origin: .zero, size: pageSize), pdfInfo as CFDictionary) else {
             throw CADError.exportFailed("Failed to create PDF context")
         }
         
