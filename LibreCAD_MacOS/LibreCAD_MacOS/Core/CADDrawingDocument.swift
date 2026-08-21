@@ -17,7 +17,7 @@ class CADDrawingDocument: ObservableObject {
     @Published var layers: [CADLayer] = []
     @Published var selectedEntityIDs: Set<UUID> = []
     @Published var currentTool: CADToolType = .select
-    @Published var currentLayerID: UUID
+    @Published var currentLayerID: UUID = UUID()
     @Published var zoomLevel: Double = 1.0
     @Published var panOffset: CADPoint = .zero
     @Published var gridSettings: GridSettings = .default
