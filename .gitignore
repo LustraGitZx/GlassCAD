@@ -1,0 +1,75 @@
+```
+# Xcode project files
+*.xcodeproj/
+*.xcworkspace/
+*.pbxuser
+*.mode1v3
+*.perspectivev3
+*.xcuserstate
+project.xcworkspace/
+xcuserdata/
+
+# Build artifacts
+build/
+DerivedData/
+*.app
+*.framework
+*.dylib
+*.bundle
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Environment
+.env
+.env.local
+.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+vendor/
+Pods/
+
+# Python (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+coverage/
+htmlcov/
+*.cover
+.hypothesis/
+.mypy_cache/
+.pytest_cache/
+.nox/
+
+# Archives
+*.zip
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.gz
+*.rar
+*.7z
+```.next/
+dist/
