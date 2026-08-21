@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppKit
 
 struct ContentView: View {
     @StateObject private var document = CADDrawingDocument()
@@ -131,7 +132,7 @@ struct ContentView: View {
     private func importFiles() {
         if let url = fileIO.showOpenPanel() {
             do {
-                let newDoc = try fileIO.import(from: url)
+                let newDoc = try fileIO.importFile(from: url)
                 document.entities = newDoc.entities
                 document.layers = newDoc.layers
                 document.fileName = url.deletingPathExtension().lastPathComponent
@@ -183,8 +184,8 @@ class CADFileIOWrapper: ObservableObject {
         try fileIO.export(document: document, to: url, format: format)
     }
     
-    func `import`(from url: URL) throws -> CADDrawingDocument {
-        return try fileIO.import(from: url)
+    func importFile(from url: URL) throws -> CADDrawingDocument {
+        return try fileIO.importFile(from: url)
     }
     
     func showOpenPanel() -> URL? {
