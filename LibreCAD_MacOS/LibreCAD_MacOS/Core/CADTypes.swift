@@ -301,15 +301,20 @@ struct SelectionBounds {
     }
     
     init(points: [CADPoint]) {
+        let bounds: SelectionBounds
         if points.isEmpty {
-            self.init()
-            return
+            bounds = SelectionBounds()
+        } else {
+            let xs = points.map { $0.x }
+            let ys = points.map { $0.y }
+            bounds = SelectionBounds(
+                minX: xs.min() ?? 0,
+                minY: ys.min() ?? 0,
+                maxX: xs.max() ?? 0,
+                maxY: ys.max() ?? 0
+            )
         }
-        
-        minX = points.map { $0.x }.min() ?? 0
-        minY = points.map { $0.y }.min() ?? 0
-        maxX = points.map { $0.x }.max() ?? 0
-        maxY = points.map { $0.y }.max() ?? 0
+        self = bounds
     }
     
     func contains(_ point: CADPoint) -> Bool {
