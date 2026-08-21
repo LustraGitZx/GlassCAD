@@ -915,8 +915,7 @@ class CADText: CADEntityBase {
         context.saveGState()
         context.setFillColor((color ?? CADColor.black).nsColor.cgColor)
         
-        let fontDescriptor = NSFontDescriptor.systemFont(ofSize: CGFloat(font.size), weight: font.bold ? .bold : .regular)
-        let nsFont = NSFont(descriptor: fontDescriptor, size: 0) ?? NSFont.systemFont(ofSize: CGFloat(font.size))
+        let nsFont = NSFont.systemFont(ofSize: CGFloat(font.size), weight: font.bold ? .bold : .regular)
         
         let attributes: [NSAttributedString.Key: Any] = [
             .font: nsFont,
