@@ -1,75 +1,47 @@
 ```
-# Xcode project files
-*.xcodeproj/
-*.xcworkspace/
-*.pbxuser
-*.mode1v3
-*.perspectivev3
-*.xcuserstate
-project.xcworkspace/
-xcuserdata/
-
 # Build artifacts
+*.o
+*.obj
+*.a
+*.lib
+*.dylib
+*.so
+*.dll
+*.exe
+*.out
+
+# Xcode/Swift build artifacts
+*.swiftmodule
+*.swiftdoc
+*.dSYM/
 build/
 DerivedData/
-*.app
-*.framework
-*.dylib
-*.bundle
 
-# Temporary files
-*.tmp
-*.temp
+# Dependencies
+Pods/
+Carthage/
+vendor/
+
+# Logs and temp files
 *.log
+*.tmp
+*.swp
 
 # Environment
 .env
 .env.local
-.env.*
+*.env.*
 
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# OS specific
-.DS_Store
-Thumbs.db
-
-# Dependencies
-node_modules/
-vendor/
-Pods/
-
-# Python (if applicable)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
+# Coverage reports
 coverage/
 htmlcov/
-*.cover
-.hypothesis/
-.mypy_cache/
-.pytest_cache/
-.nox/
+.coverage
 
-# Archives
-*.zip
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.gz
-*.rar
-*.7z
-```.next/
-dist/
+# OS generated files
+.DS_Store
+Thumbs.db
+```
