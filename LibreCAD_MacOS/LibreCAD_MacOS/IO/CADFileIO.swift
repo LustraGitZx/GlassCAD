@@ -215,7 +215,7 @@ class CADFileIO {
     // MARK: - Импорт
     
     /// Импорт документа из файла
-    func import(from url: URL) throws -> CADDrawingDocument {
+    func importFile(from url: URL) throws -> CADDrawingDocument {
         let ext = url.pathExtension.lowercased()
         
         switch ext {

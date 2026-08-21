@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreGraphics
+import AppKit
 
 // MARK: - Базовые типы
 
@@ -127,11 +128,9 @@ struct CADColor: Codable, Equatable, Hashable {
         self.alpha = 1.0
     }
     
-    #if canImport(AppKit)
     var nsColor: NSColor {
         return NSColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
     }
-    #endif
     
     #if canImport(UIKit)
     var uiColor: UIColor {
@@ -396,5 +395,5 @@ protocol CADExporter {
 /// Протокол для импортеров
 protocol CADImporter {
     var supportedExtensions: [String] { get }
-    func import(data: Data) throws -> CADDrawingDocument
+    func importData(data: Data) throws -> CADDrawingDocument
 }

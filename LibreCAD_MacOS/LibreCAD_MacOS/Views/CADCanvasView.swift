@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreGraphics
+import AppKit
 
 struct CADCanvasView: View {
     @ObservedObject var document: CADDrawingDocument
