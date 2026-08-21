@@ -7,6 +7,7 @@
 
 import Foundation
 import AppKit
+import UniformTypeIdentifiers
 
 /// Менеджер импорта/экспорта файлов
 class CADFileIO {
@@ -144,15 +145,13 @@ class CADFileIO {
             kCGPDFContextTitle as String: document.fileName
         ]
         
-        guard let pdfData = NSMutableData() else {
-            throw CADError.exportFailed("Failed to create PDF data")
-        }
+        let pdfData = NSMutableData()
         
         guard let consumer = CGDataConsumer(data: pdfData as CFMutableData) else {
             throw CADError.exportFailed("Failed to create PDF consumer")
         }
         
-        guard let context = CGContext(consumer: consumer, mediaBox: CGRect(origin: .zero, size: pageSize), pdfInfo) else {
+        guard let context = CGContext(consumer: consumer, mediaBox: CGRect(origin: .zero, size: pageSize), pdfInfo as CFDictionary) else {
             throw CADError.exportFailed("Failed to create PDF context")
         }
         
@@ -193,8 +192,8 @@ class CADFileIO {
         context.fill(CGRect(x: 0, y: 0, width: width, height: height))
         
         // Рисуем сущности
-        let transform = CGAffineTransform(translationX: 100 - bounds.minX, y: 100 + bounds.maxY)
-        transform.scaledBy(x: 1, y: -1)
+        var transform = CGAffineTransform(translationX: 100 - bounds.minX, y: 100 + bounds.maxY)
+        transform = transform.scaledBy(x: 1, y: -1)
         
         for entity in document.entities {
             entity.draw(in: context, transform: transform, displaySettings: document.displaySettings)
@@ -303,7 +302,7 @@ class CADFileIO {
         // Упрощенный парсер линий DXF
         var startPoint = CADPoint.zero
         var endPoint = CADPoint.zero
-        var layerID = UUID()
+        let layerID = UUID()
         
         var i = start
         while i < lines.count - 1 {
@@ -334,7 +333,7 @@ class CADFileIO {
     private func parseDXFCircle(from lines: [String], startingAt start: Int) -> CADCircle? {
         var center = CADPoint.zero
         var radius: Double = 1.0
-        var layerID = UUID()
+        let layerID = UUID()
         
         var i = start
         while i < lines.count - 1 {
@@ -363,7 +362,7 @@ class CADFileIO {
         var radius: Double = 1.0
         var startAngle: Double = 0
         var endAngle: Double = 360
-        var layerID = UUID()
+        let layerID = UUID()
         
         var i = start
         while i < lines.count - 1 {
