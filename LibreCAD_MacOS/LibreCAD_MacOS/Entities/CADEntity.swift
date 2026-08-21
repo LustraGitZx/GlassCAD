@@ -42,7 +42,7 @@ protocol CADEntityProtocol: Codable, Identifiable, Hashable {
 class CADEntityBase: Codable, Identifiable, Hashable {
     var id: UUID
     var layerID: UUID
-    var entityType: EntityType { EntityType.unknown }  // Changed to computed property with default
+    var entityType: EntityType { .unknown }
     var color: CADColor?
     var lineWidth: Double
     var lineType: CADLineType
@@ -371,10 +371,8 @@ class CADCircle: CADEntityBase {
             height: 2 * radius
         )
         
-        if let ellipsePath = CGPath(ellipseIn: cgRect, transform: transform) {
-            context.addPath(ellipsePath)
-            context.strokePath()
-        }
+        context.addEllipse(in: cgRect.applying(transform))
+        context.strokePath()
         
         context.restoreGState()
     }
@@ -590,8 +588,9 @@ class CADArc: CADEntityBase {
                    radius: CGFloat(radius),
                    startAngle: CGFloat(startRad),
                    endAngle: CGFloat(endRad),
-                   clockwise: false)
-        context.strokePath(using: .stroke, transform: transform)
+                   clockwise: false,
+                   transform: transform)
+        context.strokePath()
         
         context.restoreGState()
     }
@@ -788,7 +787,8 @@ class CADRectangle: CADEntityBase {
         }
         
         let rect = CGRect(x: origin.x, y: origin.y, width: width, height: height)
-        context.strokeRect(rect, transform: transform)
+        context.addRect(rect.applying(transform))
+        context.strokePath()
         
         context.restoreGState()
     }
@@ -913,8 +913,11 @@ class CADText: CADEntityBase {
         context.saveGState()
         context.setFillColor((color ?? CADColor.black).nsColor.cgColor)
         
+        let fontDescriptor = NSFont.SystemDescriptor(size: CGFloat(font.size), weight: font.bold ? .bold : .regular, italic: font.italic)
+        let nsFont = NSFont(descriptor: fontDescriptor, size: 0) ?? NSFont.systemFont(ofSize: CGFloat(font.size))
+        
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont(name: font.name, size: CGFloat(font.size)) ?? NSFont.systemFont(ofSize: CGFloat(font.size)),
+            .font: nsFont,
             .foregroundColor: (color ?? CADColor.black).nsColor
         ]
         
@@ -923,9 +926,7 @@ class CADText: CADEntityBase {
         context.textMatrix = transform
         context.textPosition = CGPoint(x: position.x, y: position.y)
         
-        #if os(macOS)
         attributedString.draw(at: CGPoint(x: position.x, y: position.y))
-        #endif
         
         context.restoreGState()
     }
