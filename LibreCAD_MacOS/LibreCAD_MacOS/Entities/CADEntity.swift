@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreGraphics
+import AppKit
 
 // MARK: - Базовый протокол сущности
 
@@ -41,18 +42,17 @@ protocol CADEntityProtocol: Codable, Identifiable, Hashable {
 class CADEntityBase: Codable, Identifiable, Hashable {
     var id: UUID
     var layerID: UUID
-    var entityType: EntityType
+    var entityType: EntityType { EntityType.unknown }  // Changed to computed property with default
     var color: CADColor?
     var lineWidth: Double
     var lineType: CADLineType
     var createdAt: Date
     var modifiedAt: Date
     
-    init(id: UUID = UUID(), layerID: UUID, entityType: EntityType, 
+    init(id: UUID = UUID(), layerID: UUID, entityType: EntityType = .unknown, 
          color: CADColor? = nil, lineWidth: Double = 1.0, lineType: CADLineType = .continuous) {
         self.id = id
         self.layerID = layerID
-        self.entityType = entityType
         self.color = color
         self.lineWidth = lineWidth
         self.lineType = lineType
@@ -586,13 +586,12 @@ class CADArc: CADEntityBase {
         let endRad = endAngle * .pi / 180.0
         
         context.beginPath()
-        context.arc(center: CGPoint(x: center.x, y: center.y),
+        context.addArc(center: CGPoint(x: center.x, y: center.y),
                    radius: CGFloat(radius),
                    startAngle: CGFloat(startRad),
                    endAngle: CGFloat(endRad),
-                   clockwise: false,
-                   transform: transform)
-        context.strokePath()
+                   clockwise: false)
+        context.strokePath(using: .stroke, transform: transform)
         
         context.restoreGState()
     }
@@ -789,11 +788,7 @@ class CADRectangle: CADEntityBase {
         }
         
         let rect = CGRect(x: origin.x, y: origin.y, width: width, height: height)
-        
-        if let rectPath = CGPath(rect: rect, transform: transform) {
-            context.addPath(rectPath)
-            context.strokePath()
-        }
+        context.strokeRect(rect, transform: transform)
         
         context.restoreGState()
     }
