@@ -1,39 +1,73 @@
-```
-# Build artifacts
+# Compiled and build artifacts
 *.o
 *.obj
-*.a
+*.out
 *.dylib
 *.so
-*.bundle
-
-# Xcode/Swift build files
-*.swiftmodule
-*.swiftdoc
-*.dSYM/
-build/
-DerivedData/
+*.a
+*.dll
+*.exe
 
 # Dependencies
-Carthage/
-Pods/
-vendor/
+node_modules/
+.venv/
+venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+target/
+.gradle/
 
-# Logs
+# Logs and temp files
 *.log
+*.tmp
+*.swp
+*.swo
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Editor
+# Editors
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
 
-# macOS
+# macOS specific
 .DS_Store
-```
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Build directories
+build/
+dist/
+*.build/
+*.dist/
+
+# Compression archives
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst

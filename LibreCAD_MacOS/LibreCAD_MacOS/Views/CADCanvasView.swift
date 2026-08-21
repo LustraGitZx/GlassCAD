@@ -211,15 +211,102 @@ struct CanvasRenderer: NSViewRepresentable {
     @ObservedObject var document: CADDrawingDocument
     @ObservedObject var toolManager: CADToolManager
     
-    func makeNSView(context: Context) -> CAMetalLayer {
-        let layer = CAMetalLayer()
-        layer.backgroundColor = NSColor.white.cgColor
-        layer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
-        return layer
+    func makeNSView(context: Context) -> CanvasView {
+        let view = CanvasView()
+        view.document = document
+        view.toolManager = toolManager
+        return view
     }
     
-    func updateNSView(_ nsView: CAMetalLayer, context: Context) {
-        // Рендеринг будет реализован через Core Graphics
+    func updateNSView(_ nsView: CanvasView, context: Context) {
+        nsView.document = document
+        nsView.toolManager = toolManager
+        nsView.setNeedsDisplay(nsView.bounds)
+    }
+}
+
+class CanvasView: NSView {
+    var document: CADDrawingDocument?
+    var toolManager: CADToolManager?
+    
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        self.wantsLayer = true
+        self.layer?.backgroundColor = NSColor.white.cgColor
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func draw(_ dirtyRect: NSRect) {
+        guard let context = NSGraphicsContext.current?.cgContext else { return }
+        guard let doc = document else { return }
+        
+        // Clear background
+        context.setFillColor(NSColor.white.cgColor)
+        context.fill(dirtyRect)
+        
+        // Draw grid
+        drawGrid(in: context, bounds: dirtyRect, document: doc)
+        
+        // Draw entities
+        for entity in doc.entities {
+            if let layer = doc.layers.first(where: { $0.id == entity.layerID }), layer.isVisible {
+                entity.draw(in: context, transform: CGAffineTransform.identity, displaySettings: doc.displaySettings)
+            }
+        }
+        
+        // Draw selection
+        for entityId in doc.selectedEntityIds {
+            if let entity = doc.entities.first(where: { $0.id == entityId }) {
+                context.saveGState()
+                context.setStrokeColor(NSColor.systemBlue.cgColor)
+                context.setLineWidth(2.0)
+                context.setLineDash(phase: 0, lengths: [5.0, 3.0])
+                // Draw bounding box
+                if let bounds = entity.bounds {
+                    let rect = CGRect(x: bounds.minX, y: bounds.minY, width: bounds.maxX - bounds.minX, height: bounds.maxY - bounds.minY)
+                    context.stroke(rect)
+                }
+                context.restoreGState()
+            }
+        }
+    }
+    
+    private func drawGrid(in context: CGContext, bounds: NSRect, document: CADDrawingDocument) {
+        let settings = document.gridSettings
+        let zoomLevel = document.zoomLevel
+        let panOffset = document.panOffset
+        
+        let centerX = bounds.width / 2
+        let centerY = bounds.height / 2
+        
+        let spacingX = settings.spacingX * zoomLevel
+        let spacingY = settings.spacingY * zoomLevel
+        
+        context.saveGState()
+        context.setStrokeColor(NSColor.lightGray.withAlphaComponent(0.3).cgColor)
+        context.setLineWidth(0.5)
+        
+        // Vertical lines
+        var x = centerX + panOffset.x.truncatingRemainder(dividingBy: spacingX)
+        while x < bounds.width {
+            context.move(to: CGPoint(x: x, y: 0))
+            context.addLine(to: CGPoint(x: x, y: bounds.height))
+            x += spacingX
+        }
+        
+        // Horizontal lines
+        var y = centerY + panOffset.y.truncatingRemainder(dividingBy: spacingY)
+        while y < bounds.height {
+            context.move(to: CGPoint(x: 0, y: y))
+            context.addLine(to: CGPoint(x: bounds.width, y: y))
+            y += spacingY
+        }
+        
+        context.strokePath()
+        context.restoreGState()
     }
 }
 

@@ -395,5 +395,5 @@ protocol CADExporter {
 /// Протокол для импортеров
 protocol CADImporter {
     var supportedExtensions: [String] { get }
-    func importData(data: Data) throws -> CADDrawingDocument
+    func importFileData(data: Data) throws -> CADDrawingDocument
 }
