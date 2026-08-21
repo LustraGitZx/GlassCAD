@@ -301,7 +301,7 @@ struct SelectionBounds {
     }
     
     init(points: [CADPoint]) {
-        guard !points.isEmpty else {
+        if points.isEmpty {
             self.init()
             return
         }
