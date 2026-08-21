@@ -583,13 +583,15 @@ class CADArc: CADEntityBase {
         let startRad = startAngle * .pi / 180.0
         let endRad = endAngle * .pi / 180.0
         
+        context.saveGState()
+        context.concatenate(transform)
+        
         context.beginPath()
         context.addArc(center: CGPoint(x: center.x, y: center.y),
                    radius: CGFloat(radius),
                    startAngle: CGFloat(startRad),
                    endAngle: CGFloat(endRad),
-                   clockwise: false,
-                   transform: transform)
+                   clockwise: false)
         context.strokePath()
         
         context.restoreGState()
@@ -913,7 +915,7 @@ class CADText: CADEntityBase {
         context.saveGState()
         context.setFillColor((color ?? CADColor.black).nsColor.cgColor)
         
-        let fontDescriptor = NSFont.SystemDescriptor(size: CGFloat(font.size), weight: font.bold ? .bold : .regular, italic: font.italic)
+        let fontDescriptor = NSFontDescriptor.systemFont(ofSize: CGFloat(font.size), weight: font.bold ? .bold : .regular)
         let nsFont = NSFont(descriptor: fontDescriptor, size: 0) ?? NSFont.systemFont(ofSize: CGFloat(font.size))
         
         let attributes: [NSAttributedString.Key: Any] = [
